@@ -44,7 +44,9 @@ public class AuthResource extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.requestMatchers().antMatchers("/api/**").and().
 //                http.
-                authorizeRequests().anyRequest().authenticated();
+                authorizeRequests()
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated();
     }
 
     @Bean

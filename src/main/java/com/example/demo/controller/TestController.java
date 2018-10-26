@@ -47,6 +47,11 @@ public class TestController {
     public Principal user(Principal principal) {
         return principal;
     }
+    @RequestMapping("/api/admin/me")
+    @ResponseBody
+    public Principal apiAdmin(Principal principal) {
+        return principal;
+    }
     @RequestMapping("/api/user/me")
     @ResponseBody
     public Principal apiUser(Principal principal) {
