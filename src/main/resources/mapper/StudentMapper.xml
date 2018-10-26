@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.dao.Student.StudentDao">
+    <resultMap id="BaseResultMap" type="com.example.demo.vo.StudentVo">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="email" column="email"/>
+        <collection property="roleVos" ofType="com.example.demo.vo.RoleVo" columnPrefix="r_">
+            <id column="role_id" property="roleId"></id>
+            <result column="name" property="role"/>
+         </collection>
+    </resultMap>
+<sql id="column">
+    s.id,
+    s.name,
+    s.password,
+    s.email,
+    r.role_id as r_role_id,
+    r.name as r_name
+</sql>
+    <select id="selectByName" resultMap="BaseResultMap">
+        select <include refid="column"/> from student s inner join role r using(role_id) where s.name=#{studentName}
+    </select>
+
+</mapper>
