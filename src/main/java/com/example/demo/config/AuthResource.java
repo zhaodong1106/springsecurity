@@ -47,6 +47,7 @@ public class AuthResource extends ResourceServerConfigurerAdapter {
                 authorizeRequests()
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
+//        http.httpBasic()
     }
 
     @Bean
