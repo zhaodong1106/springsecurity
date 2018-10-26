@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 public class StudentDetailService implements UserDetailsService {
     @Autowired
     private StudentDao studentDao;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         StudentVo studentVo = studentDao.selectByName(name);
