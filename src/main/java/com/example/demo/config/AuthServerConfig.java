@@ -1,9 +1,16 @@
 package com.example.demo.config;
 
+import com.example.demo.mobile.ValidateCodeFilter;
+import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -43,8 +50,11 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
         oauthServer.tokenKeyAccess("permitAll()")
-                .checkTokenAccess("isAuthenticated()");
+                .checkTokenAccess("isAuthenticated()")
+                .addTokenEndpointAuthenticationFilter(validateCodeFilter);
     }
+    @Autowired
+    private ValidateCodeFilter validateCodeFilter;
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(authenticationManager)
@@ -54,5 +64,17 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     public TokenStore tokenStore() {
         RedisTokenStore redis = new RedisTokenStore(connectionFactory);
         return redis;
+    }
+    @Bean
+    public RedisTemplate redisTemplate(RedisConnectionFactory connectionFactory){
+        RedisTemplate redisTemplate=new RedisTemplate();
+        redisTemplate.setConnectionFactory(connectionFactory);
+        StringRedisSerializer stringSerializer=new StringRedisSerializer();
+        GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer=new GenericJackson2JsonRedisSerializer();
+        redisTemplate.setKeySerializer(stringSerializer);
+        redisTemplate.setValueSerializer(stringSerializer);
+        redisTemplate.setHashKeySerializer(stringSerializer);
+        redisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
+        return redisTemplate;
     }
 }

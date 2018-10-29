@@ -23,13 +23,12 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/login","/loginForm").permitAll()
+                .antMatchers("/login","/loginForm","/smsValidateCode").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").loginProcessingUrl("/loginForm").failureForwardUrl("/500").successForwardUrl("/center").and()
-                .logout().invalidateHttpSession(true).clearAuthentication(true).logoutSuccessUrl("/login").deleteCookies("JSESSIONID").and()
-                .httpBasic();
+                .logout().invalidateHttpSession(true).clearAuthentication(true).logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
         http.csrf().disable();
 //        http.requestMatchers()
 //                .antMatchers("/login", "/oauth/authorize","/exit")
