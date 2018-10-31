@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -89,6 +90,15 @@ public class TestController {
     public Principal apiAdmin(Principal principal) {
         return principal;
     }
+
+    /**
+     * 通常要生成随机数，我们要么创建一个java.util.Random或Math.random（）的实例 - 它在第一次调用时在内部创建java.util.Random的实例。但是，在并发应用程序中，上述使用会导致争用问题
+     *Random是线程安全的，可供多个线程使用。但是如果多个线程使用相同的Random实例，则多个线程共享相同的种子。它会导致多个线程之间的争用，从而导致性能下降。
+     *ThreadLocalRandom是上述问题的解决方案。 ThreadLocalRandom每个线程都有一个Random实例，可以防止争用。
+     *因此，基本上，每个线程使用一个随机实例允许您停止同步所有线程必须使用的种子。
+     * @param username
+     * @return
+     */
     @RequestMapping("/smsValidateCode")
     @ResponseBody
     public Object apiAdmin(String username) {
@@ -98,7 +108,7 @@ public class TestController {
         if(valueOperations.get("code:"+username)!=null){
             return "60s以后再发送验证码";
         }
-        int code=new Random().nextInt(900000)+100000;
+        int code=ThreadLocalRandom.current().nextInt(900000)+100000;
         System.out.println("验证码是:"+code);
         valueOperations.set("code:"+username,String.valueOf(code),60, TimeUnit.SECONDS);
         return "发送成功";

@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * Created by T011689 on 2018/10/24.
  */
@@ -26,6 +28,10 @@ public class StudentDetailService implements UserDetailsService {
 //        studentVo.setGrantedAuthorityList(Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
         return studentVo;
     }
-    public void test(){
+    public static  void main(String[] args){
+        for(int i=0;i<10;i++) {
+            int code = ThreadLocalRandom.current().nextInt(900000) + 100000;
+            System.out.println("验证码是:" + code);
+        }
     }
 }
