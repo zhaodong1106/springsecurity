@@ -29,25 +29,32 @@ public class ValidateCodeFilter extends OncePerRequestFilter{
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String uri=request.getRequestURI();
         if("/server/oauth/token".equals(uri)){
-            String code = request.getParameter("code");
-            String username=request.getParameter("username");
-            if(username!=null&&!"".equals(username.trim())) {
-                String useCodeInRedis = valueOperations.get("code:" +username);
-                if(useCodeInRedis==null){
-                    String mes = objectMapper.writeValueAsString(new ResponseApi(402, null, "code已过期"));
+            String grantType=request.getParameter("grant_type");
+            if("password".equals(grantType)) {
+                String code = request.getParameter("code");
+                String username = request.getParameter("username");
+                if (username != null && !"".equals(username.trim())) {
+                    String useCodeInRedis = valueOperations.get("code:" + username);
+                    if (useCodeInRedis == null) {
+                        String mes = objectMapper.writeValueAsString(new ResponseApi(402, null, "code已过期"));
+                        responseOutWithJson(response, mes);
+                        return;
+                    }
+                    if (useCodeInRedis.equals(code)) {
+                        chain.doFilter(request, response);
+                        return;
+                    } else {
+                        String mes = objectMapper.writeValueAsString(new ResponseApi(400, null, "验证码错误"));
+                        responseOutWithJson(response, mes);
+                        return;
+                    }
+                } else {
+                    String mes = objectMapper.writeValueAsString(new ResponseApi(401, null, "用户名不存在"));
                     responseOutWithJson(response, mes);
                     return;
                 }
-                if(useCodeInRedis.equals(code)){
-                    chain.doFilter(request, response);
-                }else {
-                    String mes = objectMapper.writeValueAsString(new ResponseApi(400, null, "验证码错误"));
-                    responseOutWithJson(response, mes);
-                    return;
-                }
-            }else {
-                String mes = objectMapper.writeValueAsString(new ResponseApi(401, null, "用户名不存在"));
-                responseOutWithJson(response, mes);
+            }else{
+                chain.doFilter(request, response);
                 return;
             }
         }else {

@@ -1,9 +1,15 @@
 package com.example.demo.controller;
 
 import com.example.demo.vo.StudentVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.session.FindByIndexNameSessionRepository;
+import org.springframework.session.Session;
+import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -47,12 +56,34 @@ public class TestController {
         return  "只有管理员才能访问："+principal.getName();
     }
 
-
-    @RequestMapping("/user/me")
+//    @Autowired
+//    FindByIndexNameSessionRepository<? extends Session> sessions;
+    @RequestMapping("/users")
     @ResponseBody
-    public Principal user(Principal principal) {
-        return principal;
+    public Object user(Principal principal) {
+//        sessions.findByIndexNameAndIndexValue()
+        List<Object> allPrincipals = registry.getAllPrincipals();
+        return allPrincipals;
     }
+    @Autowired
+    private SessionRegistry registry;
+    @RequestMapping("/user/delete")
+    @ResponseBody
+    public Object userDelete(String name) {
+//        sessions.findByIndexNameAndIndexValue()
+        Collection<? extends Session> usersSessions = sessionRepository.findByIndexNameAndIndexValue(FindByIndexNameSessionRepository.PRINCIPAL_NAME_INDEX_NAME, name).values();
+        usersSessions.forEach((temp) -> {
+            String sessionId = temp.getId();
+// sessionRegistry.removeSessionInformation(sessionId);
+            SessionInformation info = sessionRegistry.getSessionInformation(sessionId);
+            info.expireNow();
+        });
+         return "success";
+    }
+    @Autowired
+    private FindByIndexNameSessionRepository<? extends Session> sessionRepository;
+    @Autowired
+    private SessionRegistry sessionRegistry;
     @RequestMapping("/api/admin/me")
     @ResponseBody
     public Principal apiAdmin(Principal principal) {

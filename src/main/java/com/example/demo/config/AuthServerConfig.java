@@ -12,12 +12,14 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
@@ -47,6 +49,8 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
     private RedisConnectionFactory connectionFactory;
+    @Autowired
+    private UserDetailsService userDetailsService;
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
         oauthServer.tokenKeyAccess("permitAll()")
@@ -55,10 +59,19 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     }
     @Autowired
     private ValidateCodeFilter validateCodeFilter;
+
+    /**
+     * 其中的userDetailsService一定要写，不写的话/oauth/token拿token不会报错，但是使用refresh_token刷新获取token会报错，因为
+     * 要使用userDetailService用参数name查数据库来获取principal生成新的access_token
+     * @param endpoints
+     * @throws Exception
+     */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(authenticationManager)
-                .tokenStore(tokenStore());
+                .userDetailsService(userDetailsService)
+                .tokenStore(tokenStore())
+                .approvalStoreDisabled();
     }
     @Bean
     public TokenStore tokenStore() {

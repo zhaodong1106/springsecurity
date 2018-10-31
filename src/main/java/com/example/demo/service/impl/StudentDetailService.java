@@ -1,7 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dao.Student.StudentDao;
+import com.example.demo.entity.Student;
 import com.example.demo.vo.StudentVo;
+import org.mybatis.spring.batch.MyBatisCursorItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,5 +25,7 @@ public class StudentDetailService implements UserDetailsService {
         StudentVo studentVo = studentDao.selectByName(name);
 //        studentVo.setGrantedAuthorityList(Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
         return studentVo;
+    }
+    public void test(){
     }
 }

@@ -40,11 +40,23 @@ public class AuthResource extends ResourceServerConfigurerAdapter {
 //
 //    }
 
+    /**
+     * @EnableResourceServer这个注解会@configuration注入一个Bean:ResourceServerConfiguration
+     * 这个Bean也是继承WebSecurityConfigurerAdapter这个抽象类,
+     * 默认Order是3,
+     * 而WebSecurityConfigurerAdapter的默认Order是100
+     * 数字越小的拦截器越在前面，所以@EnableResourceServer资源服务器会先拦截/api/**的所有请求，
+     * 剩下的请求会走formlogin的WebSecurityConfigurerAdapter拦截器那里
+     * @EnableResourceServer资源服务器默认((HttpSecurity)((HttpSecurity)http.authenticationProvider(new AnonymousAuthenticationProvider("default")).exceptionHandling().accessDeniedHandler(resources.getAccessDeniedHandler()).and()).sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()).csrf().disable()
+     * @EnableResourceServer资源服务器如果不配置HttpSecurity默认((AuthorizedUrl)http.authorizeRequests().anyRequest()).authenticated();
+     *  @param http
+     * @throws Exception
+     */
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.requestMatchers().antMatchers("/api/**").and().
+        http.requestMatchers().antMatchers("/api/**").and()
 //                http.
-                authorizeRequests()
+                .authorizeRequests()
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
 //        http.httpBasic()

@@ -5,14 +5,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Title11</title>
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
 </head>
 <body>
 <h3>Login with Username and Password</h3><form name='f' th:action='@{/loginForm}' method='POST'>
     <table>
         <tr><td>User:</td><td><input type='text' name='username' value=''></td></tr>
         <tr><td>Password:</td><td><input type='password' name='password'/></td></tr>
+        <tr><td><input name="remember-me" type="checkbox"> 下次自动登录</td><td>
         <tr><td colspan='2'><input name="submit" type="submit" value="Login"/></td></tr>
     </table>
 </form>
+<img th:src="@{/images/goods/goods1106.png}" height="300"/>
 </body>
+<script th:inline="javascript">
+    $(function(){
+        alert("dadasdsa")
+    })
+</script>
 </html>
