@@ -42,8 +42,8 @@ public class AuthResource extends ResourceServerConfigurerAdapter {
 
     /**
      * @EnableResourceServer这个注解会@configuration注入一个Bean:ResourceServerConfiguration
-     * 这个Bean也是继承WebSecurityConfigurerAdapter这个抽象类,
-     * 默认Order是3,
+     * ResourceServerConfiguration这个Bean也是继承WebSecurityConfigurerAdapter这个抽象类,
+     * ResourceServerConfiguration默认Order是3
      * 而WebSecurityConfigurerAdapter的默认Order是100
      * 数字越小的拦截器越在前面，所以@EnableResourceServer资源服务器会先拦截/api/**的所有请求，
      * 剩下的请求会走formlogin的WebSecurityConfigurerAdapter拦截器那里
