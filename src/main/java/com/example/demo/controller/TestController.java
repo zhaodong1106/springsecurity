@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.Student;
 import com.example.demo.vo.StudentVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ValueOperations;
@@ -11,6 +12,8 @@ import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,12 +22,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -141,4 +142,18 @@ public class TestController {
             e.printStackTrace();
         }
     }
+
+    @RequestMapping("/testMobilePattern")
+    @ResponseBody
+    public Object testMobilePattern(@Valid Student student, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            Map<String,String> map=new HashMap<>();
+            for(FieldError fieldError:bindingResult.getFieldErrors()){
+                map.put(fieldError.getField(),fieldError.getDefaultMessage());
+            }
+            return map;
+        }
+        return "success";
+    }
+
 }
