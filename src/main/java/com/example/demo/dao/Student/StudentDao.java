@@ -10,4 +10,5 @@ import org.apache.ibatis.annotations.Param;
 public interface StudentDao {
     StudentVo selectByName(@Param("studentName") String studentName);
     Integer register(Student student);
+    Integer insert(Student student);
 }

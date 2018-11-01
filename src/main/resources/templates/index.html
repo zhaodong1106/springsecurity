@@ -8,13 +8,41 @@
     <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
 </head>
 <body>
-<h3>Login with Username and Password</h3><form name='f' th:action='@{/loginForm}' method='POST'>
+<h3>Login with Username and Password</h3>
+<form name='f' th:action='@{/loginForm}' method='POST'>
     <table>
         <tr><td>User:</td><td><input type='text' name='username' value=''></td></tr>
         <tr><td>Password:</td><td><input type='password' name='password'/></td></tr>
         <tr><td><input name="remember-me" type="checkbox"> 下次自动登录</td><td>
         <tr><td colspan='2'><input name="submit" type="submit" value="Login"/></td></tr>
     </table>
+</form>
+<br>
+<p>注册</p>
+<form id="register" th:action='@{/register}' method='POST' th:object="${student}">
+    <!-- ② -->
+    <div class="form-group" th:classappend="${#fields.hasErrors('name')}? has-error">
+        <label class="control-label">名前</label>
+        <input class="form-control" type="text" th:field="*{name}" />
+        <!-- ③ -->
+        <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+    </div>
+    <!--<div class="form-group" th:classappend="${#fields.hasErrors('age')}? has-error">
+        <label class="control-label">年齢</label>
+        <input class="form-control" type="number" th:field="*{age}" />
+        <span class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
+    </div>-->
+    <div class="form-group" th:classappend="${#fields.hasErrors('password')}? has-error">
+        <label class="control-label">密码</label>
+        <input class="form-control" type="text" th:field="*{password}" />
+        <span class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+    </div>
+    <!--<div class="form-group" th:classappend="${#fields.hasErrors('position')}? has-error">
+        <label class="control-label">守備位置</label>
+        <input class="form-control" type="text" th:field="*{position}" />
+        <span class="text-danger" th:if="${#fields.hasErrors('position')}" th:errors="*{position}"></span>
+    </div>-->
+    <button class="btn btn-default" type="submit">作成</button>
 </form>
 <img th:src="@{/images/goods/goods1106.png}" height="300"/>
 </body>

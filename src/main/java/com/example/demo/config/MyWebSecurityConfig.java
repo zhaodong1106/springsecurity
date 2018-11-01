@@ -50,7 +50,7 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/login","/loginForm","/smsValidateCode").permitAll()
+                .antMatchers("/login","/loginForm","/smsValidateCode","/register").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()

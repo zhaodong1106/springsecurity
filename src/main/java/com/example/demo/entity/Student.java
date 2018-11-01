@@ -1,6 +1,9 @@
 package com.example.demo.entity;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -8,11 +11,14 @@ import javax.validation.constraints.Pattern;
  */
 public class Student {
     private int id;
+    @NotBlank
+    @Length(min = 5,max = 10)
     private String name;
+    @Pattern(regexp="(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{5,10}",message="密码必须是5~10位数字和字母的组合")
     private String password;
     private String email;
-    @Pattern(regexp = "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$",message = "请填写正确的手机号码🙆‍")
-    private String mobile;
+/*    @Pattern(regexp = "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$",message = "请填写正确的手机号码🙆‍")
+    private String mobile;*/
 
     public int getId() {
         return id;
@@ -46,11 +52,11 @@ public class Student {
         return password;
     }
 
-    public String getMobile() {
+    /*public String getMobile() {
         return mobile;
     }
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
-    }
+    }*/
 }

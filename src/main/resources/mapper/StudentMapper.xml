@@ -22,5 +22,29 @@
     <select id="selectByName" resultMap="BaseResultMap">
         select <include refid="column"/> from student s inner join role r using(role_id) where s.name=#{studentName}
     </select>
-
+    <insert id="insert" parameterType="com.example.demo.entity.Student">
+        insert into student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name!=null">
+                name,
+            </if>
+            <if test="password!=null">
+                password,
+            </if>
+            <if test="email!=null">
+                email,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="password!=null">
+                #{password},
+            </if>
+            <if test="email!=null">
+                #{email},
+            </if>
+        </trim>
+    </insert>
 </mapper>

@@ -1,12 +1,15 @@
 package com.example.demo.controller;
 
+import com.example.demo.dao.Student.StudentDao;
 import com.example.demo.entity.Student;
 import com.example.demo.vo.StudentVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
@@ -17,6 +20,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +48,7 @@ public class TestController {
     }
     @RequestMapping("/login")
     public ModelAndView index(){
-        return  new ModelAndView("index");
+        return  new ModelAndView("index").addObject("student",new Student());
     }
     @RequestMapping("/center")
     public ModelAndView center(HttpSession session){
@@ -155,5 +159,23 @@ public class TestController {
         }
         return "success";
     }
+    @RequestMapping("/register")
+    public ModelAndView register( @Valid Student student,BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            student.setPassword(null);
+           return new ModelAndView("index");
+        }
+        student.setPassword(passwordEncoder.encode(student.getPassword()));
+        if(studentDao.selectByName(student.getName())==null) {
+            Integer count = studentDao.insert(student);
+        }else {
+            System.out.println("已经存在");
+        }
+        return new ModelAndView(new RedirectView("index"));
+    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private StudentDao studentDao;
 
 }
