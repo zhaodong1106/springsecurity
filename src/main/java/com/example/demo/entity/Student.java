@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import io.netty.util.NettyRuntime;
+import io.netty.util.internal.SystemPropertyUtil;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
@@ -59,4 +61,8 @@ public class Student {
     public void setMobile(String mobile) {
         this.mobile = mobile;
     }*/
+    public static  void main(String[] args){
+        int max = Math.max(1, SystemPropertyUtil.getInt("io.netty.eventLoopThreads", NettyRuntime.availableProcessors() * 2));
+        System.out.println("max:"+max);
+    }
 }

@@ -3,6 +3,7 @@ package com.example.demo.vo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.Email;
 import java.util.Collection;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class StudentVo implements UserDetails {
     private static final long serialVersionUID = 8342172521316445842L;
     private Integer id;
     private String name;
-    private String password;
+    private  String password;
     private String email;
     private List<RoleVo> roleVos;
 

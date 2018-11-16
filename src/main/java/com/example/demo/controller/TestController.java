@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.dao.Student.StudentDao;
 import com.example.demo.entity.Student;
 import com.example.demo.vo.StudentVo;
+import org.apache.commons.codec.digest.Md5Crypt;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.ValueOperations;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.WebUtils;
+import org.thymeleaf.util.ArrayUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +33,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +41,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by T011689 on 2018/10/24.
+ *
  */
 @Controller
 public class TestController {
@@ -46,14 +51,18 @@ public class TestController {
         StudentVo studentVo= (StudentVo)authentication.getPrincipal();
         return studentVo;
     }
+    @RequestMapping("/testJessionId")
+    @ResponseBody
+    public Object testJessionId(){
+        return "2222222";
+    }
     @RequestMapping("/login")
     public ModelAndView index(){
         return  new ModelAndView("index").addObject("student",new Student());
     }
     @RequestMapping("/center")
-    public ModelAndView center(HttpSession session){
-        System.out.println("forward 经过了控制器");
-        System.out.println("session 过期时间:"+session.getMaxInactiveInterval());
+    public ModelAndView center(HttpServletRequest request){
+        String name = (String)WebUtils.getSessionAttribute(request, "name");
         return  new ModelAndView("center");
     }
     @RequestMapping("/admin/test")

@@ -6,6 +6,8 @@
     <meta charset="UTF-8">
     <title>Title11</title>
     <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <link th:href="@{/css/11.css}" rel="stylesheet" type="text/css"/>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <body>
 <h3>Login with Username and Password</h3>
@@ -44,11 +46,18 @@
     </div>-->
     <button class="btn btn-default" type="submit">作成</button>
 </form>
-<img th:src="@{/images/goods/goods1106.png}" height="300"/>
+<button value="jessionid" onclick="alter()"/>
+<img th:src="@{/upload/goods/goods1106.png}" height="300"/>
 </body>
 <script th:inline="javascript">
-    $(function(){
-        alert("dadasdsa")
-    })
+    function alter(){
+        $.ajax({
+            url:'/server/testJessionId',
+            type:'get',
+            success:function (data) {
+                alert(data);
+            }
+        })
+    }
 </script>
 </html>

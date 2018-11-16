@@ -50,7 +50,7 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/login","/loginForm","/smsValidateCode","/register").permitAll()
+                .antMatchers("/login","/loginForm","/smsValidateCode","/register","/testJessionId").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
@@ -58,7 +58,7 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .logout().invalidateHttpSession(true).clearAuthentication(true).logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
 //                .and()
 //                .rememberMe().rememberMeParameter("remember-me").tokenRepository(tokenRepository()).userDetailsService(userDetailsService);
-        http.csrf().disable();
+//        http.csrf().disable();
         http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(false).sessionRegistry(sessionRegistry()).expiredUrl("/login?expired");
 // http.requestMatchers()
 //                .antMatchers("/login", "/oauth/authorize","/exit")
@@ -85,6 +85,8 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     public void configure(WebSecurity web) throws Exception {
+//        web.ignoring().antMatchers("/js/**");
+//        web.ignoring().antMatchers("/css/**");
         web.ignoring().antMatchers("/upload/**");
     }
     /**
@@ -106,4 +108,6 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter{
      */
     @Autowired
     private FindByIndexNameSessionRepository<? extends Session> sessionRepository;
+
+
 }
