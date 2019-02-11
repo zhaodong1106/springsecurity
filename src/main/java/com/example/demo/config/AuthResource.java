@@ -57,6 +57,7 @@ public class AuthResource extends ResourceServerConfigurerAdapter {
         http.requestMatchers().antMatchers("/api/**").and()
 //                http.
                 .authorizeRequests()
+                .antMatchers("/api/haiwan","/api/haiwanjson").permitAll()
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
 //        http.httpBasic()
@@ -66,4 +67,5 @@ public class AuthResource extends ResourceServerConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

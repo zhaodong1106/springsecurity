@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html   xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<div sec:authentication="principal.authorities"></div>
+<div sec:authorize="hasRole('USER')">Text visible to user.</div>
+<div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
+<div sec:authorize="isAuthenticated()">
+    Text visible only to authenticated users.
+</div>
+Authenticated username:
+<div sec:authentication="name"></div>
+Authenticated user roles:
+<div sec:authentication="principal.authorities"></div>
+<div sec:authorize="hasRole('ROLE_USER')">
+    <label for="role">Roles:</label>
+    <span id="role" sec:authentication="principal.authorities"></span><br>
+</div>
+<div th:text="dsdasd">1111111</div>
+<sec:authentication property="principal.username" ></sec:authentication>
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+    <label for="role2">ADMIN Roles:</label>
+    <span id="role2" sec:authentication="principal.authorities"></span><br>
+</div>
+email: <span sec:authentication="principal.email"></span><br>
+<br>
+<div>账户：<span sec:authentication="name"></span></div>
+<div><span sec:authentication="principal.authorities"></span></div>
+<br>
+<div sec:authorize="isAuthenticated()">
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="退出"/>
+    </form>
+</div>
+</body>
+</html>

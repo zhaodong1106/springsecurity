@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.demo.dao.MenuDao">
+    <resultMap id="BaseResultMap" type="com.example.demo.vo.MenuVo">
+        <id property="menuId" column="menu_id"></id>
+        <result property="menuUrl" column="menu_url"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="createTime" column="create_time"/>
+        <collection property="roles" ofType="com.example.demo.entity.Role" columnPrefix="r_">
+            <id column="role_id" property="roleId"></id>
+            <result column="name" property="name"/>
+         </collection>
+    </resultMap>
+<sql id="column">
+    m.menu_id,
+    m.menu_url,
+    m.menu_name,
+    m.create_time,
+    r.role_id as r_role_id,
+    r.name as r_name
+</sql>
+    <select id="selectMenuWithRole" resultMap="BaseResultMap">
+        select <include refid="column"/> from menu m inner join role_menu rm on m.menu_id=rm.menu_id inner join
+                role r on r.role_id=rm.role_id where m.menu_url=#{menuUrl};
+    </select>
+    <insert id="insert" parameterType="com.example.demo.entity.Student">
+        insert into student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name!=null">
+                name,
+            </if>
+            <if test="password!=null">
+                password,
+            </if>
+            <if test="email!=null">
+                email,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="name!=null">
+                #{name},
+            </if>
+            <if test="password!=null">
+                #{password},
+            </if>
+            <if test="email!=null">
+                #{email},
+            </if>
+        </trim>
+    </insert>
+</mapper>

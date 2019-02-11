@@ -7,6 +7,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.session.FindByIndexNameSessionRepository;
@@ -35,8 +37,8 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter{
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-    @Autowired
-    private UserDetailsService userDetailsService;
+//    @Autowired
+//    private UserDetailsService userDetailsService;
 
     /**
      * http.authorizeRequests()匹配所有请求，在@EnableResourceServer拦截器之后
@@ -47,11 +49,21 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter{
      * @param http
      * @throws Exception
      */
+//    @Autowired
+//    private CustomSecurityMetadataSource customSecurityMetadataSource;
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/login","/loginForm","/smsValidateCode","/register","/testJessionId").permitAll()
+                .antMatchers("/login","/test/**","/loginForm","/haiwan","/smsValidateCode","/register","/testJessionId","/swagger-resources/**","/v2/api-docs").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
+//                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+//                    @Override
+//                    public <O extends FilterSecurityInterceptor> O postProcess(
+//                            O fsi) {
+//                        fsi.setSecurityMetadataSource(customSecurityMetadataSource);
+//                        return fsi;
+//                    }
+//                })
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").loginProcessingUrl("/loginForm").failureForwardUrl("/500").successForwardUrl("/center").and()
@@ -85,8 +97,9 @@ public class MyWebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-//        web.ignoring().antMatchers("/js/**");
-//        web.ignoring().antMatchers("/css/**");
+        web.ignoring().antMatchers("/static/**");
+        web.ignoring().antMatchers("/webjars/**");
+        web.ignoring().antMatchers("/swagger-ui.html");
         web.ignoring().antMatchers("/upload/**");
     }
     /**

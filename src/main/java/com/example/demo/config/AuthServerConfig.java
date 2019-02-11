@@ -3,6 +3,7 @@ package com.example.demo.config;
 import com.example.demo.mobile.ValidateCodeFilter;
 import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -85,9 +86,8 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
         StringRedisSerializer stringSerializer=new StringRedisSerializer();
         GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer=new GenericJackson2JsonRedisSerializer();
         redisTemplate.setKeySerializer(stringSerializer);
-        redisTemplate.setValueSerializer(stringSerializer);
         redisTemplate.setHashKeySerializer(stringSerializer);
-        redisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
+        redisTemplate.setDefaultSerializer(genericJackson2JsonRedisSerializer);
         return redisTemplate;
     }
 }

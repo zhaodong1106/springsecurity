@@ -19,8 +19,17 @@ public class Student {
     @Pattern(regexp="(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{5,10}",message="密码必须是5~10位数字和字母的组合")
     private String password;
     private String email;
+    private Integer likeNums;
 /*    @Pattern(regexp = "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$",message = "请填写正确的手机号码🙆‍")
     private String mobile;*/
+
+    public Integer getLikeNums() {
+        return likeNums;
+    }
+
+    public void setLikeNums(Integer likeNums) {
+        this.likeNums = likeNums;
+    }
 
     public int getId() {
         return id;

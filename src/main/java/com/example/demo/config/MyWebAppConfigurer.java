@@ -19,6 +19,11 @@ public class MyWebAppConfigurer extends WebMvcConfigurationSupport {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
         registry.addResourceHandler("/upload/**").addResourceLocations("file:C:\\images\\");
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/").setCacheControl(CacheControl.maxAge(60, TimeUnit.MINUTES));
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/").setCacheControl(CacheControl.maxAge(60,TimeUnit.MINUTES));
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/").setCacheControl(CacheControl.maxAge(60,TimeUnit.MINUTES));
     }
 //    @Bean
 //    public Filter shallowEtagHeaderFilter() {
