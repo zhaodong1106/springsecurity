@@ -81,6 +81,7 @@ public class TestController {
     @RequestMapping("/testPrinciple")
     @ResponseBody
     public Object testPrinciple(Authentication authentication){
+        System.out.println(22);
         StudentVo studentVo= (StudentVo)authentication.getPrincipal();
         return studentVo;
     }
